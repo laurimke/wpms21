@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   droidSafeArea: {
     flex: 1,
-    backgroundColor: '#ccc"',
+    backgroundColor: '#ccc',
     paddingTop: Platform.OS === 'android' ? 25 : 0,
   },
 });
