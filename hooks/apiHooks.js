@@ -2,11 +2,11 @@ import {useEffect, useState} from 'react';
 import {doFetch} from '../utils/http';
 import {baseUrl} from '../utils/variables';
 
-// TODO: add necessary imports
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
 
   useEffect(() => {
+    // https://scriptverse.academy/tutorials/js-self-invoking-functions.html
     (async () => {
       setMediaArray(await loadMedia());
     })();
@@ -14,25 +14,27 @@ const useMedia = () => {
 
   const loadMedia = async () => {
     try {
-      const mediaIlmanThumbnailia = doFetch(baseUrl + 'media');
+      const mediaIlmanThumbnailia = await doFetch(baseUrl + 'media');
       const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
-        return await loadSingeMedia(media.file_id);
+        return await loadSingleMedia(media.file_id);
       });
       return Promise.all(kaikkiTiedot);
     } catch (e) {
       console.log('loadMedia', e.message);
     }
   };
-  const loadSingeMedia = async (id) => {
+
+  const loadSingleMedia = async (id) => {
     try {
-      const tiedosto = await fetch(baseUrl + 'media/' + id);
+      const tiedosto = await doFetch(baseUrl + 'media/' + id);
       return tiedosto;
     } catch (e) {
-      console.log('loadSIngleMedia', e.message());
+      console.log('loadSingleMedia', e.message);
       return {};
     }
   };
-  return {mediaArray, loadMedia, loadSingeMedia};
+
+  return {mediaArray, loadMedia, loadSingleMedia};
 };
 
 export {useMedia};
