@@ -3,20 +3,24 @@ import {StyleSheet, View, Text, Button} from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useLogin, useUser} from '../hooks/ApiHooks';
+import RegisterForm from '../components/RegisterForm';
+import LoginForm from '../components/LoginForm';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn} = useContext(MainContext);
-
-  const logIn = async () => {
-    await AsyncStorage.setItem('userToken', 'valid token value');
-    setIsLoggedIn(true);
-  };
+  const {login} = useLogin();
+  const {checkToken} = useUser();
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
     console.log('logIn asyncstorage token: ', userToken);
-    if (userToken === 'valid token value') {
-      setIsLoggedIn(true);
+    if (userToken) {
+      const userInfo = await checkToken(userToken);
+      if (userInfo.user_id) {
+        // TODO:save user info to mainContext
+        setIsLoggedIn(true);
+      }
     }
   };
 
@@ -26,8 +30,9 @@ const Login = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text>Login</Text>
-      <Button title="Sign in!" onPress={logIn} />
+      <Text>LogIn</Text>
+      <LoginForm navigation={navigation} />
+      <RegisterForm navigation={navigation} />
     </View>
   );
 };
