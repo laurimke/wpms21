@@ -1,24 +1,30 @@
 import React, {useContext, useEffect} from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useLogin, useUser} from '../hooks/ApiHooks';
+import {useUser} from '../hooks/ApiHooks';
 import RegisterForm from '../components/RegisterForm';
 import LoginForm from '../components/LoginForm';
 
 const Login = ({navigation}) => {
-  const {setIsLoggedIn} = useContext(MainContext);
-  const {login} = useLogin();
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {checkToken} = useUser();
+  // console.log('Login isLoggedIn', isLoggedIn);
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
-    console.log('logIn asyncstorage token: ', userToken);
+    console.log('logIn asyncstorage token:', userToken);
     if (userToken) {
       const userInfo = await checkToken(userToken);
       if (userInfo.user_id) {
-        // TODO:save user info to mainContext
+        setUser(userInfo);
         setIsLoggedIn(true);
       }
     }
@@ -29,11 +35,15 @@ const Login = ({navigation}) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text>LogIn</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      <Text>Login</Text>
+
       <LoginForm navigation={navigation} />
       <RegisterForm navigation={navigation} />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

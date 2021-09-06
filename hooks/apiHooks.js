@@ -41,15 +41,15 @@ const useLogin = () => {
   const login = async (userCredentials) => {
     const requestOptions = {
       method: 'POST',
-      mode: 'no-cors',
+      // mode: 'no-cors',
       headers: {'Content-Type': 'application/json'},
       body: userCredentials,
     };
     try {
       const loginResponse = await doFetch(baseUrl + 'login', requestOptions);
       return loginResponse;
-    } catch (e) {
-      console.log('useLogin error', e.message);
+    } catch (error) {
+      console.log('login error', error.message);
     }
   };
   return {login};
@@ -64,14 +64,16 @@ const useUser = () => {
     try {
       const userInfo = doFetch(baseUrl + 'users/user', options);
       return userInfo;
-    } catch (e) {
-      console.log('checkToken error', e.message);
+    } catch (error) {
+      console.log('checkToken error', error);
     }
-    const register = async (token) => {
-      // https://media.mw.metropolia.fi/wbma/docs/#api-User-PostUser
-    };
   };
-  return {checkToken};
+
+  const register = async (token) => {
+    // https://media.mw.metropolia.fi/wbma/docs/#api-User-PostUser
+  };
+
+  return {checkToken, register};
 };
 
 export {useMedia, useLogin, useUser};

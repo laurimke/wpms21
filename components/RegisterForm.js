@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button, View} from 'react-native';
 import PropTypes from 'prop-types';
+import {View, Button} from 'react-native';
 import FormTextInput from './FormTextInput';
 import useSignUpForm from '../hooks/RegisterHooks';
 
@@ -8,8 +8,9 @@ const RegisterForm = ({navigation}) => {
   const {handleInputChange} = useSignUpForm();
 
   const doRegister = () => {
-    // TODO:add register() to useUser() hook in APIhooks
+    // TODO: add register() to useUser() hook in API hooks
   };
+
   return (
     <View>
       <FormTextInput
