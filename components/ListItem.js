@@ -27,9 +27,7 @@ const ListItem = ({singleMedia, navigation}) => {
             onPress={() => {
               navigation.navigate('Single', singleMedia);
             }}
-          >
-            View
-          </Button>
+          ></Button>
         </ECListItem>
       }
     </View>
