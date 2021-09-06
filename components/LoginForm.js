@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
-import {View, Button} from 'react-native';
+import {Button} from 'react-native-elements';
+import {View} from 'react-native';
 import FormTextInput from './FormTextInput';
 import useLoginForm from '../hooks/LoginHooks';
 import {MainContext} from '../contexts/MainContext';
@@ -14,7 +15,7 @@ const LoginForm = ({navigation}) => {
 
   const doLogin = async () => {
     try {
-      const loginInfo = await login(JSON.stringify(inputs));
+      const loginInfo = await login(inputs);
       console.log('doLogin response', loginInfo);
       await AsyncStorage.setItem('userToken', loginInfo.token);
       // TODO: Save user info (loginInfo.user) to MainContext
@@ -40,7 +41,7 @@ const LoginForm = ({navigation}) => {
         secureTextEntry={true}
       />
 
-      <Button title="Login!" onPress={doLogin} />
+      <Button raised title="Login!" onPress={doLogin} />
     </View>
   );
 };

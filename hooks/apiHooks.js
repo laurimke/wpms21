@@ -43,7 +43,7 @@ const useLogin = () => {
       method: 'POST',
       // mode: 'no-cors',
       headers: {'Content-Type': 'application/json'},
-      body: userCredentials,
+      body: JSON.stringify(userCredentials),
     };
     try {
       const loginResponse = await doFetch(baseUrl + 'login', requestOptions);
@@ -69,10 +69,21 @@ const useUser = () => {
     }
   };
 
-  const register = async (token) => {
+  const register = async (userCredentials) => {
     // https://media.mw.metropolia.fi/wbma/docs/#api-User-PostUser
+    const requestOptions = {
+      method: 'POST',
+      // mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(userCredentials),
+    };
+    try {
+      const registerResponse = await doFetch(baseUrl + 'users', requestOptions);
+      return registerResponse;
+    } catch (error) {
+      console.log('register error', error.message);
+    }
   };
-
   return {checkToken, register};
 };
 
