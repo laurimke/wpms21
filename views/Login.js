@@ -6,8 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import RegisterForm from '../components/RegisterForm';
 import LoginForm from '../components/LoginForm';
-import {Card} from 'react-native-elements';
-import {Button} from 'react-native-elements/dist/buttons/Button';
+import {Card, Button} from 'react-native-elements';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -60,6 +59,17 @@ const Login = ({navigation}) => {
          */}
         </Card>
       )}
+      <Button
+        type="clear"
+        title={
+          registerFormToggle
+            ? 'No account yet? Register here'
+            : 'Already registered? Login here'
+        }
+        onPress={() => {
+          setRegisterFormToggle(!registerFormToggle);
+        }}
+      />
     </KeyboardAvoidingView>
   );
 };
