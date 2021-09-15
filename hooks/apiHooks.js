@@ -1,20 +1,24 @@
+import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {doFetch} from '../utils/http';
-import {baseUrl} from '../utils/variables';
+import {appID, baseUrl} from '../utils/variables';
 
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [update, setUpdate] = useState(0);
 
   useEffect(() => {
     // https://scriptverse.academy/tutorials/js-self-invoking-functions.html
     (async () => {
       setMediaArray(await loadMedia());
+      console.log('useMedia useEffect', mediaArray);
     })();
-  }, []);
+  }, [update]);
 
   const loadMedia = async () => {
     try {
-      const mediaIlmanThumbnailia = await doFetch(baseUrl + 'media');
+      const mediaIlmanThumbnailia = await useTag().getFilesByTag(appID);
       const kaikkiTiedot = mediaIlmanThumbnailia.map(async (media) => {
         return await loadSingleMedia(media.file_id);
       });
@@ -34,7 +38,36 @@ const useMedia = () => {
     }
   };
 
-  return {mediaArray, loadMedia, loadSingleMedia};
+  const uploadMedia = async (formData, token) => {
+    try {
+      setLoading(true);
+      const options = {
+        method: 'POST',
+        headers: {'x-access-token': token},
+        data: formData,
+      };
+      const result = await axios(baseUrl + 'media/', options);
+      // console.log('axios', result.data);
+      if (result.data) {
+        setUpdate(update + 1);
+        console.log('update', update);
+        return result.data;
+      }
+    } catch (e) {
+      // console.log('axios error', e.message);
+      throw new Error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    mediaArray,
+    loading,
+    loadMedia,
+    loadSingleMedia,
+    uploadMedia,
+  };
 };
 
 const useLogin = () => {
@@ -95,6 +128,7 @@ const useUser = () => {
       console.log('register error', error.message);
     }
   };
+
   return {checkToken, register, checkUsernameAvailable};
 };
 
@@ -108,7 +142,28 @@ const useTag = () => {
       return {};
     }
   };
-  return {getFilesByTag};
+
+  // eslint-disable-next-line camelcase
+  const addTag = async (file_id, tag, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({file_id, tag}),
+    };
+    console.log('optiot', options);
+    try {
+      const tagInfo = await doFetch(baseUrl + 'tags', options);
+      return tagInfo;
+    } catch (error) {
+      // console.log('addTag error', error);
+      throw new Error(error.message);
+    }
+  };
+
+  return {getFilesByTag, addTag};
 };
 
 export {useMedia, useLogin, useUser, useTag};

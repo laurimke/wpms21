@@ -63,8 +63,8 @@ const Login = ({navigation}) => {
         type="clear"
         title={
           registerFormToggle
-            ? 'No account yet? Register here'
-            : 'Already registered? Login here'
+            ? 'Already registered? Login here'
+            : 'No account yet? Register here'
         }
         onPress={() => {
           setRegisterFormToggle(!registerFormToggle);

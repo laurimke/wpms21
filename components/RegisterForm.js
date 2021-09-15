@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Alert, View} from 'react-native';
-import {Button, Input} from 'react-native-elements';
 import useSignUpForm from '../hooks/RegisterHooks';
+import {Button, Input} from 'react-native-elements';
 import {useUser} from '../hooks/ApiHooks';
 
 const RegisterForm = ({navigation}) => {
@@ -12,6 +12,7 @@ const RegisterForm = ({navigation}) => {
 
   const doRegister = async () => {
     try {
+      delete inputs.confirmPassword;
       const registerInfo = await register(inputs);
       if (registerInfo) {
         Alert.alert(registerInfo.message);
@@ -28,7 +29,7 @@ const RegisterForm = ({navigation}) => {
         placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
         onEndEditing={(event) => {
-          console.log('onendEditing value', event.nativeEvent.txt);
+          console.log('onEndEditing value', event.nativeEvent.text);
           checkUsername(event.nativeEvent.text);
           handleOnEndEditing('username', event.nativeEvent.text);
         }}
@@ -75,9 +76,7 @@ const RegisterForm = ({navigation}) => {
       <Button
         title="Register!"
         onPress={doRegister}
-        disabled={
-          errors.username || errors.password || errors.email || errors.full_name
-        }
+        disabled={errors.username || errors.password || errors.email}
       />
     </View>
   );
